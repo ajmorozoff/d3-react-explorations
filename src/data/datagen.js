@@ -14,11 +14,21 @@ let lastCalculated = moment(START_DATE);
 let data = [];
 
 while (lastCalculated.isBefore(CURRENT_DATE)) {
-    let estimated = {
+    let estimatedPast = {
         date: lastCalculated.format('MM DD YYYY'),
-        state: 'passed'
+        status: 'done'
     };
-    data.push(estimated);
+    data.push(estimatedPast);
     lastCalculated.add(LENGTH, 'days');
 };
 
+while (lastCalculated.isBefore(EST_END_DATE)) {
+    let estimatedFuture = {
+        date: lastCalculated.format('MM DD YYYY'),
+        status: 'staged'
+    };
+    data.push(estimatedFuture);
+    lastCalculated.add(LENGTH, 'days');
+}
+
+console.log(data.length);
