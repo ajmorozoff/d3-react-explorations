@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 
-const XAxis = ({ scale, dataSet, offset=0 }) => {
+const XAxis = ({ scale, offset=0 }) => {
 
-    const xAxis = d3.axisBottom(scale)
-        .ticks(dataSet.length)
+    const xAxis = d3.axisBottom(scale);
 
     useEffect(() => {
         const container = d3.select('#x-axis');

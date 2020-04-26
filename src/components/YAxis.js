@@ -3,8 +3,7 @@ import * as d3 from 'd3';
 
 const YAxis = ({ scale, dataSet, offset=0 }) => {
 
-    const yAxis = d3.axisRight(scale)
-        .ticks(dataSet.length);
+    const yAxis = d3.axisRight(scale);
 
     useEffect(() => {
         const container = d3.select('#y-axis');

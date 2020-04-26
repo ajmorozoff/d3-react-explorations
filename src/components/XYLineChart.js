@@ -1,34 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
+import Axios from 'axios';
 
 import YAxis from './YAxis';
 import XAxis from './XAxis';
 
-const XYLineChart = ({ width, height, dataSet, xCallBack, yCallBack, padding }) => {
+const XYLineChart = ({ width, height, xCallBack, yCallBack, padding }) => {
+    const [yScale, setYScale] = useState(d3.scaleLinear());
+    const [xScale, setXScale] = useState(d3.scaleTime());
+    const [data, setData] = useState([]);
+
     const chartHeight = height - padding;
     const chartWidth = width - padding;
 
-    let yScale = d3.scaleLinear()
-    .domain(d3.extent(dataSet, yCallBack))
-    .range([chartHeight, padding]);
-
-    let xScale = d3.scaleLinear()
-    .domain(d3.extent(dataSet, xCallBack))
-    .range([padding, chartWidth]);
-
+    const fetchData = async() => {
+        await Axios.get(`https://api.covid19api.com/country/united-states?from=2020-03-19T00:00:00Z&to=2020-03-26T00:00:00Z`);
+    }
 
     const updateScales = (newData) => {
-        yScale = d3.scaleLinear()
+        const newYScale = d3.scaleLinear()
             .domain(d3.extent(newData, yCallBack))
             .range([chartHeight, padding]);
 
-        xScale = d3.scaleLinear()
+        const newXScale = d3.scaleLinear()
             .domain(d3.extent(newData, xCallBack))
             .range([padding, chartWidth]);
+        
+        setYScale(newYScale);
+        setXScale(newXScale);
     }
 
     const updateDataPoints = (newData) => {
-
         const entering = d3.select('#chart')
         .selectAll('circle')
         .data(newData);
@@ -48,28 +50,34 @@ const XYLineChart = ({ width, height, dataSet, xCallBack, yCallBack, padding }) 
         updateDataPoints(newData);
     }
 
+    if (!data.length) {
+        return (
+            <div>
+                loading...
+                <p>
+                Click 'Load Data' to update the dataset
+                </p>
+                <button
+                    onClick={() => fetchData()}
+                >
+                    Load Data
+                </button>
+            </div>
+        )
+    }
+
     return (
         <div>
             <svg id='chart' width={width} height={height}>
                 <XAxis 
                     offset={chartHeight}
                     scale={xScale}
-                    dataSet={dataSet}
                 />
                 <YAxis
                     offset={padding}
                     scale={yScale}
-                    dataSet={dataSet}
                 />
             </svg>
-            <p>
-                Click 'Load Data' to update the dataset
-            </p>
-            <button
-                onClick={() => updateData(dataSet)}
-            >
-                Load Data
-            </button>
         </div>
     )
 }
