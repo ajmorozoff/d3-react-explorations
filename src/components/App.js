@@ -9,11 +9,12 @@ function App() {
   return (
     <div className="App">
       <XYLineChart
-        width={400}
+        width={800}
         height={400}
         dataSet={staticTimeSeries}
-        xCallBack={d => d.date}
+        xCallBack={d => d.date.getDate()}
         yCallBack={d => d.price}
+        padding={24}
       />
     </div>
   );

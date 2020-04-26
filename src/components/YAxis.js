@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
 
-const YAxis = ({ height, dataSet, yCallBack }) => {
+const YAxis = ({ scale, dataSet, offset=0 }) => {
 
-    let range = d3.extent(dataSet, yCallBack);
-
-    const y = d3.scaleLinear()
-    //flip the range because y is top-down
-    .domain(range[1], range[0])
-    .range([height, 0]);
-
-    const yAxis = d3.axisLeft(y)
-        .ticks(dataSet.length)
+    const yAxis = d3.axisRight(scale)
+        .ticks(dataSet.length);
 
     useEffect(() => {
         const container = d3.select('#y-axis');
-        container.call(yAxis);
+        container
+            .classed('y axis', true)
+            .attr('transform', `translate(${offset}, 0)`)
+            .call(yAxis);
     })
 
-    //todo: figure out if you really need to 'call' as per above
+    //todo: figure out how to generate a unique id per component
     return (
-        <g id='y-axis'>
+        <g id='y-axis' className='axis'>
         </g>
     );
 }
