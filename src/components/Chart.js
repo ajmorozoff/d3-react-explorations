@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import * as d3 from "d3";
+import * as d3 from 'd3';
 import { generateData } from '../data/datagen';
 
 const dataSet = generateData();
@@ -28,7 +28,7 @@ const Chart = () => {
             .attr('cx', (d, i) => (x(d.month) + 1))
             .attr('cy', (d, i) => (y(d.year) + 1))
             .attr('r', 5)
-            .attr('fill', (d, i) => d.status === 'staged' ? 'red' : 'black')
+            .attr('fill', (d, i) => d.status === 'staged' ? 'red' : d.status === 'done' ? 'black' : 'lightgrey')
     }, []);
 
     return (
