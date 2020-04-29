@@ -25,22 +25,29 @@ const XYLineChart = ({ width, height, fX, fY, data, padding }) => {
             
             setYScale(() => newYScale);
             setXScale(() => newXScale);
-            updateDataPoints();
+            updateDataPoints(newXScale, newYScale);
         }
         
     }, [data]);
 
-    const updateDataPoints = () => {
+    const updateDataPoints = (xFunc, yFunc) => {
+        console.log('datapoint', data[0]);
+        console.log('cx', xFunc(fX(data[0])));
+        console.log(d3.extent(data, fX));
+
         const entering = d3.select('#chart')
         .selectAll('circle')
         .data(data);
     
         entering.enter()
             .append('circle')
-            .attr('cx', d => xScale(fX(d)))
-            .attr('cy', d => yScale(fY(d)))
+            .attr('cx', d => xFunc(fX(d)))
+            .merge(entering)
+            .transition()
+            .duration(2000)
             .attr('r', 5)
-            .merge(entering);
+            .attr('cy', d => yFunc(fY(d)))
+            ;
         
         entering.exit().remove();
     }
