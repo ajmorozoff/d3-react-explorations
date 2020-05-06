@@ -6,7 +6,7 @@ import XYChart from './XYChart';
 const ChartRoot = () => {
     const [data, setData] = useState([]);
     const [isLoading, setLoading] = useState(false);
-    const [country, setCountry] = useState('spain');
+    const [country, setCountry] = useState('taiwan');
 
     const fetchData = async() => {
         const newData = (await Axios.get(`https://api.covid19api.com/total/dayone/country/${country}/status/confirmed`)).data; 
@@ -31,6 +31,7 @@ const ChartRoot = () => {
                         data={data}
                         fX={(d) => new Date(d.Date)}
                         fY={(d) => d.Cases}
+                        fFill={(d) => d.Cases}
                     />
                 : 
                     <div>
