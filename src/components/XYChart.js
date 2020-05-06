@@ -7,7 +7,7 @@ const MARGIN = { top: 16, right: 48, left: 48, bottom: 16};
 
 
 
-const XYChart = ({ data, fX, fY, fFill }) => {
+const XYChart = ({ data, fX, fY, fFill, fillCode }) => {
     const chartTop = HEIGHT - MARGIN.bottom;
     const chartBottom = MARGIN.top;
     const chartRight = WIDTH - MARGIN.right;
@@ -31,9 +31,20 @@ const XYChart = ({ data, fX, fY, fFill }) => {
             .range([chartTop, chartBottom]);
         
         const colorScale = d3.scaleSequential()
-            .domain(d3.extent(data, fFill))
-            .interpolator(d3.interpolateOrRd);
-
+            .domain(d3.extent(data, fFill));
+        
+        switch (fillCode) {
+            case 'orrd':
+                colorScale.interpolator(d3.interpolateOrRd);
+                break;
+            case 'plasma':
+                colorScale.interpolator(d3.interpolatePlasma);
+                break;
+            default:
+                colorScale.interpolator(d3.interpolatePlasma);
+                break;
+        };    
+            
         const nextShapes = data.map(d => {
             return {
                 x: xScale(fX(d)),
@@ -61,7 +72,7 @@ const XYChart = ({ data, fX, fY, fFill }) => {
         if (data.length) {
             updateData();
         }
-    }, [data, fX, fY, fFill]);
+    }, [data, fX, fY, fFill, fillCode]);
 
     useEffect(() => {
         if (xAxis) {

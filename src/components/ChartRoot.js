@@ -6,10 +6,12 @@ import XYChart from './XYChart';
 const ChartRoot = () => {
     const [data, setData] = useState([]);
     const [isLoading, setLoading] = useState(false);
-    const [country, setCountry] = useState('taiwan');
+    const [country, setCountry] = useState('italy');
+    const [color, setColor] = useState('orrd');
 
     const fetchData = async() => {
-        const newData = (await Axios.get(`https://api.covid19api.com/total/dayone/country/${country}/status/confirmed`)).data; 
+        setLoading(true);
+        const newData = (await Axios.get(`https://api.covid19api.com/country/${country}?from=2020-03-01T00:00:00Z&to=2020-04-01T00:00:00Z`)).data; 
         setData(newData);
         console.log(newData);
         setLoading(false);
@@ -17,7 +19,6 @@ const ChartRoot = () => {
 
     useEffect(() => {
         if (!data.length) {
-            setLoading(true);
             fetchData();
         }
     }, [])
@@ -30,8 +31,9 @@ const ChartRoot = () => {
                     <XYChart
                         data={data}
                         fX={(d) => new Date(d.Date)}
-                        fY={(d) => d.Cases}
-                        fFill={(d) => d.Cases}
+                        fY={(d) => d.Confirmed}
+                        fFill={(d) => d.Deaths}
+                        fillCode={color}
                     />
                 : 
                     <div>
@@ -43,6 +45,14 @@ const ChartRoot = () => {
             >
                 Refresh Data
             </button>
+            <select name='legend' onChange={(e) => setColor(e.target.value)}>
+                <option key={1} value={'orrd'}>
+                    Orange-Red
+                </option>
+                <option key={2} value={'plasma'}>
+                    Plasma
+                </option>
+            </select>
         </div>
     )
 };
