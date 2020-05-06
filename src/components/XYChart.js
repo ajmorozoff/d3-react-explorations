@@ -20,39 +20,46 @@ const XYChart = ({ data, fX, fY, fFill }) => {
     const xAxisRef = useRef(null);
     const yAxisRef = useRef(null);
 
+    const updateData = () => {
+
+        const xScale = d3.scaleTime()
+            .domain(d3.extent(data, fX))
+            .range([chartLeft, chartRight]);
+
+        const yScale = d3.scaleLinear()
+            .domain([0, d3.max(data, fY)])
+            .range([chartTop, chartBottom]);
+        
+        const colorScale = d3.scaleSequential()
+            .domain(d3.extent(data, fFill))
+            .interpolator(d3.interpolateOrRd);
+
+        const nextShapes = data.map(d => {
+            return {
+                x: xScale(fX(d)),
+                y: yScale(fY(d)),
+                height: chartTop - yScale(fY(d)),
+                width: (chartWidth / data.length),
+                fill: colorScale(fFill(d))
+            }
+        });
+
+        setXAxis(() => 
+            d3.axisBottom()
+                .scale(xScale)
+        );
+        setYAxis(() => {
+            d3.axisLeft()
+                .scale(yScale)
+        });
+
+        setChartShapes(nextShapes);
+
+    };
+
     useEffect(() => {
         if (data.length) {
-            const xScale = d3.scaleTime()
-                .domain(d3.extent(data, fX))
-                .range([chartLeft, chartRight]);
-
-            const yScale = d3.scaleLinear()
-                .domain([0, d3.max(data, fY)])
-                .range([chartTop, chartBottom]);
-            
-            const colorScale = d3.scaleSequential()
-                .domain(d3.extent(data, fFill))
-                .interpolator(d3.interpolateOrRd);
-
-            const nextShapes = data.map(d => {
-                return {
-                    x: xScale(fX(d)),
-                    y: yScale(fY(d)),
-                    height: chartTop - yScale(fY(d)),
-                    width: (chartWidth / data.length),
-                    fill: colorScale(fFill(d))
-                }
-            });
-
-            setXAxis(() => 
-                d3.axisBottom()
-                    .scale(xScale)
-            );
-            setYAxis(() => {
-                d3.axisLeft()
-                    .scale(yScale)
-            }) 
-            setChartShapes(nextShapes);
+            updateData();
         }
     }, [data, fX, fY, fFill]);
 
