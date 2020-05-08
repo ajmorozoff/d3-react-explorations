@@ -5,7 +5,27 @@
   align-items: center;
 }
 
+.axis line {
+  stroke: #ADADAD;
+}
+
+.axis path {
+  stroke: #ADADAD;
+}
+
+.axis text {
+  stroke: #ADADAD;
+}
 
 .tick text {
   fill: black;
+}
+
+body {
+  background-color: #14171C;
+  color: #FFFFFF;
+}
+
+label {
+  margin-right: 0.5rem;
 }

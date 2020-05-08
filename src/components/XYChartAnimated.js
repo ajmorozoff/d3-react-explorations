@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 
 const HEIGHT = 600;
 const WIDTH = 850;
-const MARGIN = { top: 16, right: 48, left: 48, bottom: 16};
+const MARGIN = { top: 16, right: 48, left: 48, bottom: 24};
 
 
 
@@ -109,6 +109,7 @@ const XYChartAnimated = ({ data, fX, fY, fMax, fFill, fillCode }) => {
     useEffect(() => {
         if (xAxis) {
             d3.select(xAxisRef.current)
+                .attr('class', 'axis')
                 .call(xAxis);
         }
     }, [xAxis])
@@ -116,6 +117,7 @@ const XYChartAnimated = ({ data, fX, fY, fMax, fFill, fillCode }) => {
     useEffect(() => {
         if (yAxis) {
             d3.select(yAxisRef.current)
+                .attr('class', 'axis')
                 .call(yAxis);
         }
     }, [yAxis])
